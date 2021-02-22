@@ -1,24 +1,26 @@
 SUBSTRATE core commands
 
 NODE template:
-CMD from folder location: C:\Users\atale\substrate-node-template\target\release
+CMD from folder location: \substrate-node-template\target\release
 
 Single-node development----
-> To purge the chain
-node-template purge-chain -y --dev
+> To launch initial run
+cargo run
 
 > To check the build/runtime for errors
-cargo build --release
 cargo check -p node-template-runtime
-
-> To run node in dev/temp mode
-node-template --dev --tmp
 
 > To compile in release mode
 cargo build --release
 
-> To upgrade in release (binary pre-production) mode
+> To build the runtime (wasm binary pre-production)
 cargo build --release -p node-template-runtime
+
+> To purge the chain
+node-template purge-chain -y --dev
+
+> To run node in dev/temp mode
+node-template --dev --tmp
 
 > To run with external rpc enabled
 node-template --dev --tmp --ws-external --rpc-external
@@ -116,7 +118,7 @@ OFFCHAIN WORKERS NODES MUST CLAIM THEIR NODE BEFORE CONNECTING TO WELL KNOWN NOD
 
 
 FRONT END template:
-CMD from folder location: C:\Users\atale\substrate-front-end-template
+CMD from folder location: \substrate-front-end-template
 > To display on localhost
 yarn start
 
