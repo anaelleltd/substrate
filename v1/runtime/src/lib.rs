@@ -97,7 +97,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("node-template"),
 	impl_name: create_runtime_str!("node-template"),
 	authoring_version: 1,
-	spec_version: 2,  // Value Updated on 22/02/2021 upgrade.
+	spec_version: 1,  // Value Updated on ??? upgrade.
 	impl_version: 1,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 1,
@@ -299,26 +299,6 @@ impl pallet_node_authorization::Trait for Runtime {
 }
 /*End Added 28/12/2020*/
 
-/*ADDED 22/02/2021*/
-// Define the types required by the Scheduler pallet.
-parameter_types! {
-    pub MaximumSchedulerWeight: Weight = Perbill::from_percent(80) * MaximumBlockWeight::get();
-    pub const MaxScheduledPerBlock: u32 = 50;
-}
-
-// Configure the runtime's implementation of the Scheduler pallet.
-impl pallet_scheduler::Trait for Runtime {
-    type Event = Event;
-    type Origin = Origin;
-    type PalletsOrigin = OriginCaller;
-    type Call = Call;
-    type MaximumWeight = MaximumSchedulerWeight;
-    type ScheduleOrigin = frame_system::EnsureRoot<AccountId>;
-    type MaxScheduledPerBlock = MaxScheduledPerBlock;
-    type WeightInfo = ();
-}
-/*End Added 22/02/2021*/
-
 parameter_types! {
 	pub const TransactionByteFee: Balance = 1;
 }
@@ -362,8 +342,6 @@ construct_runtime!(
         Nicks: pallet_nicks::{Module, Call, Storage, Event<T>},
         /*** Added 28/12/2020 ***/
         NodeAuthorization: pallet_node_authorization::{Module, Call, Storage, Event<T>, Config<T>},
-        /*** Added 22/02/2021 ***/
-        Scheduler: pallet_scheduler::{Module, Call, Storage, Event<T>},
 	}
 );
 

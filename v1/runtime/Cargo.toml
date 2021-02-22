@@ -40,9 +40,6 @@ pallet-balances = { default-features = false, version = '2.0.0' }
 pallet-nicks = { default-features = false, version = '2.0.0' }
 pallet-node-authorization = { default-features = false, version = '2.0.0' }
 #--End Added--
-#--Added 22/02/2021--
-pallet-scheduler = { default-features = false, version = '2.0.0' }
-#--End Added--
 pallet-grandpa = { default-features = false, version = '2.0.0' }
 pallet-randomness-collective-flip = { default-features = false, version = '2.0.0' }
 pallet-sudo = { default-features = false, version = '2.0.0' }
@@ -91,7 +88,6 @@ std = [
     'pallet-timestamp/std',
     'pallet-transaction-payment/std',
     'pallet-transaction-payment-rpc-runtime-api/std',
-    'pallet-scheduler/std',
     'sp-api/std',
     'sp-block-builder/std',
     'sp-consensus-aura/std',
