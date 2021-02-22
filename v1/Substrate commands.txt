@@ -1,0 +1,126 @@
+SUBSTRATE core commands
+
+NODE template:
+CMD from folder location: C:\Users\atale\substrate-node-template\target\release
+
+Single-node development----
+> To purge the chain
+node-template purge-chain -y --dev
+
+> To check the build/runtime for errors
+cargo build --release
+cargo check -p node-template-runtime
+
+> To run node in dev/temp mode
+node-template --dev --tmp
+
+> To compile in release mode
+cargo build --release
+
+> To upgrade in release (binary pre-production) mode
+cargo build --release -p node-template-runtime
+
+> To run with external rpc enabled
+node-template --dev --tmp --ws-external --rpc-external
+
+
+Multi-node local testnet----
+PRIVATE NETWORK SETUP:
+1st NODE
+node-template purge-chain --base-path /tmp/alice --chain local
+node-template
+  --base-path /tmp/alice
+  --chain local
+  --alice
+  --port 30333
+  --ws-port 9945 
+  --rpc-port 9933 
+  --node-key 0000000000000000000000000000000000000000000000000000000000000001 
+  --telemetry-url "wss://telemetry.polkadot.io/submit 0"
+  --validator
+
+2nd NODE
+node-template purge-chain --base-path /tmp/bob --chain local
+node-template
+  --base-path /tmp/bob
+  --chain local
+  --bob
+  --port 30334
+  --ws-port 9946
+  --rpc-port 9934
+  --telemetry-url "wss://telemetry.polkadot.io/submit 0"
+  --validator 
+  --bootnodes /ip4/127.0.0.1/tcp/30333/p2p/12D3KooWEyoppNCUx8Yx66oV9fJnriXwCcXwDDUA2kj6vnc6iDEp
+
+Node UI
+https://polkadot.js.org/apps/#/settings?rpc=ws://127.0.0.1:9945
+
+
+GENERATING KEYS: https://substrate.dev/docs/en/tutorials/start-a-private-network/keygen
+1) Subkey option
+cargo install --force subkey --git https://github.com/paritytech/substrate --version 2.0.0
+subkey generate --scheme sr25519
+subkey inspect --scheme ed25519 "Type Mnemonic phrase here"
+2) Polkadot JS APPS option
+3) Pre-Generated keys option
+
+
+CUSTOM CHAIN SETUP: 
+Chain Specs
+node-template build-spec --disable-default-bootnode --chain local > customSpec.json
+node-template build-spec --chain=customSpec.json --raw --disable-default-bootnode > customSpecRaw.json
+NOTE: Share the customSpecRaw.json with your all the other validators in the network!!!
+
+
+STARTING BOOTNODE:
+1st Participant: PeerID 12D3KooWESnoJRCgbfYDYoRTn41KqYACPSUnrbEf564rMDHBFA7m
+node-template
+  --base-path /tmp/node01
+  --chain ./customSpecRaw.json
+  --port 30333
+  --ws-port 9944
+  --rpc-port 9933
+  --telemetry-url "wss://telemetry.polkadot.io/submit 0"
+  --validator
+  --rpc-methods Unsafe
+  --name MyNode01
+
+2nd Participant: PeerID 12D3KooWC4YzAQ78qdZCqgzWEXXbPHV2Ncir5KAxtaNwf99v6vZa
+node-template purge-chain --base-path /tmp/node02 --chain local
+node-template
+  --base-path /tmp/node02
+  --chain ./customSpecRaw.json
+  --port 30334
+  --ws-port 9945
+  --rpc-port 9934
+  --telemetry-url "wss://telemetry.polkadot.io/submit 0"
+  --validator
+  --rpc-methods Unsafe
+  --name MyNode02
+  --bootnodes /ip4/127.0.0.1/tcp/30333/p2p/12D3KooWESnoJRCgbfYDYoRTn41KqYACPSUnrbEf564rMDHBFA7m
+
+
+PERMISSIONED NETWORK SETUP
+
+Compile the new FRAME runtime (including node authorisation in the Chain specs and bs58 in node's dependencies)
+cargo build --release
+
+Launch 4 nodes:
+1) node-template --chain=local --base-path ~/tmp/validator1 --alice --node-key=c12b6d18942f5ee8528c8e2baf4e147b5c5c18710926ea492d09cbd9f6c9f82a --port 30333 --ws-port 9944
+2) node-template --chain=local --base-path ~/tmp/validator2 --bob --node-key=6ce3be907dbcabf20a9a5a60a712b4256a54196000a8ed4050d352bc113f8c58 --port 30334 --ws-port 9945
+3) node-template --chain=local --base-path ~/tmp/validator3 --name charlie  --node-key=3a9d5b35b9fb4c42aafadeca046f6bf56107bd2579687f069b42646684b94d9e --port 30335 --ws-port=9946 --offchain-worker always
+4) node-template --chain=local --base-path ~/tmp/validator4 --name dave --node-key=a99331ff4f0e0a0434a6263da0a5823ea3afcfffe590c9f3014e6cf620f2b19a --port 30336 --ws-port 9947 --offchain-worker always
+
+OFFCHAIN WORKERS NODES MUST CLAIM THEIR NODE BEFORE CONNECTING TO WELL KNOWN NODES!!!
+
+
+
+FRONT END template:
+CMD from folder location: C:\Users\atale\substrate-front-end-template
+> To display on localhost
+yarn start
+
+> To display in production mode
+yarn build
+
+
